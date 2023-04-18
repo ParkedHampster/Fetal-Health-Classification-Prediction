@@ -68,7 +68,7 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
         if ax==None:
             fig, ax = plt.subplots(figsize=figsize)
         if class_names==None:
-            class_names = np.unique(y)
+            class_names = str(np.unique(y))
         for class_id in range(n_classes):
             RocCurveDisplay.from_predictions(
                 ohe[:,class_id],
