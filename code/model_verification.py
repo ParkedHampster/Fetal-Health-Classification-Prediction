@@ -5,12 +5,13 @@ from sklearn.metrics import confusion_matrix, \
                             roc_curve, roc_auc_score, \
                             auc, \
                             RocCurveDisplay, ConfusionMatrixDisplay
+from sklearn.model_selection import cross_val_score
 
 # from yellowbrick.classifier import ROCAUC
 # from yellowbrick.classifier.rocauc import roc_auc
 import matplotlib.pyplot as plt
 
-def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,**kwargs):
+def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,**kwargs):
     """_summary_
     model: model with a .predict() method
         the model being used for predictions and scoring
@@ -37,12 +38,18 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
         an array of class names for a plotted ROC curve
         in case the y values are not the desired names
 
+    returns: tuple
+        recall, rocauc, cv_score
+            - scores of the same names in order
+            - cv_score is an array of scores
+
     """
     predictions = model.predict(X)
     proba_predictions = model.predict_proba(X)
     print(f"""
 Model recall:         {(recall := recall_score(y,predictions,average=average))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class='ovr',average=average))}
+Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv)).mean()}
     """)
 
     # multi-class roc_plot modified from sample in sklearn
@@ -67,4 +74,4 @@ Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class
             ylabel="True Positive Rate",
             xlabel="False Positive Rate"
         )
-    return (recall, rocauc)
+    return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score}
