@@ -26,4 +26,6 @@
 
 descriptions obtained via
 [Kaggle](https://www.kaggle.com/datasets/andrewmvd/fetal-health-classification) using 
-column descriptions
+column descriptions  
+Data obtained via
+[Ayres de Campos et al. (2000) SisPorto 2.0 A Program for Automated Analysis of Cardiotocograms. J Matern Fetal Med 5:311-318](https://onlinelibrary.wiley.com/doi/10.1002/1520-6661(200009/10)9:5%3C311::AID-MFM12%3E3.0.CO;2-9)

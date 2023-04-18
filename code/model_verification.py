@@ -6,8 +6,8 @@ from sklearn.metrics import confusion_matrix, \
                             auc, \
                             RocCurveDisplay, ConfusionMatrixDisplay
 
-from yellowbrick.classifier import ROCAUC
-from yellowbrick.classifier.rocauc import roc_auc
+# from yellowbrick.classifier import ROCAUC
+# from yellowbrick.classifier.rocauc import roc_auc
 import matplotlib.pyplot as plt
 
 def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,**kwargs):
@@ -44,6 +44,7 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
 Model recall:         {(recall := recall_score(y,predictions,average=average))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class='ovr',average=average))}
     """)
+
     # multi-class roc_plot modified from sample in sklearn
     # documentation, available here:
     #  https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html#roc-curve-using-the-ovr-macro-average
