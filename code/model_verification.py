@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 # from yellowbrick.classifier.rocauc import roc_auc
 import matplotlib.pyplot as plt
 
-def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,**kwargs):
+def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,scoring='recall_macro',**kwargs):
     """_summary_
     model: model with a .predict() method
         the model being used for predictions and scoring
@@ -37,6 +37,10 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     class_names: array of str
         an array of class names for a plotted ROC curve
         in case the y values are not the desired names
+    cv: (default=5) int
+        number of folds for cross_val_score
+    scoring: (default='recall_macro')
+        scoring method for cross_val_score
 
     returns: tuple
         recall, rocauc, cv_score
@@ -49,7 +53,7 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     print(f"""
 Model recall:         {(recall := recall_score(y,predictions,average=average))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class='ovr',average=average))}
-Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv)).mean()}
+Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scoring)).mean()}
     """)
 
     # multi-class roc_plot modified from sample in sklearn
