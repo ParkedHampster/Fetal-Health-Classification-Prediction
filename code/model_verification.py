@@ -11,7 +11,8 @@ from sklearn.model_selection import cross_val_score
 # from yellowbrick.classifier.rocauc import roc_auc
 import matplotlib.pyplot as plt
 
-def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,scoring='recall_macro',**kwargs):
+def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,
+        scoring='recall_macro',figsize=(14,8),**kwargs):
     """_summary_
     model: model with a .predict() method
         the model being used for predictions and scoring
@@ -41,6 +42,8 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
         number of folds for cross_val_score
     scoring: (default='recall_macro')
         scoring method for cross_val_score
+    figsize: (default=(14,8))
+        the figsize to use if ax is not defined
 
     returns: tuple
         recall, rocauc, cv_score
@@ -63,7 +66,7 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
         n_classes = len(np.unique(y))
         ohe = pd.get_dummies(y).values
         if ax==None:
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=figsize)
         if class_names==None:
             class_names = np.unique(y)
         for class_id in range(n_classes):
