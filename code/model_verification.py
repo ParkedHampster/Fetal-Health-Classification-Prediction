@@ -41,7 +41,7 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     predictions = model.predict(X)
     proba_predictions = model.predict_proba(X)
     print(f"""
-Initial Model recall: {(recall := recall_score(y,predictions,average=average))}
+Model recall:         {(recall := recall_score(y,predictions,average=average))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class='ovr',average=average))}
     """)
     # multi-class roc_plot modified from sample in sklearn

@@ -23,8 +23,7 @@
 | histogram_tendency | Histogram trend |
 | fetal_health | Fetal health: 1 - Normal 2 - Suspect 3 - Pathological |
 
-<!--
-[[1]](https://www.kaggle.com/datasets/andrewmvd/fetal-health-classification):-->
+
 descriptions obtained via
 [Kaggle](https://www.kaggle.com/datasets/andrewmvd/fetal-health-classification) using 
 column descriptions
