@@ -82,3 +82,6 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
             xlabel="False Positive Rate"
         )
     return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score}
+
+def model_scoring_table():
+    return
