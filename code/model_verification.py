@@ -33,6 +33,9 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
         !!! ONLY WORKING WITH MACRO AND OVR SETTINGS !!!
     ax: pyplot axis
         the axis for a curve plot to be drawn on
+    class_names: array of str
+        an array of class names for a plotted ROC curve
+        in case the y values are not the desired names
 
     """
     predictions = model.predict(X)
@@ -56,10 +59,10 @@ Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class
                 ohe[:,class_id],
                 proba_predictions[:,class_id],
                 ax=ax,
-                name=f"ROC curve for {class_names[class_id]}"
+                name=f"ROC curve for {class_names[class_id].title()}"
                 )
         ax.set(
-            title="ROC One-v-Rest multiclass",
+            title="ROC One-v-Rest Multiclass",
             ylabel="True Positive Rate",
             xlabel="False Positive Rate"
         )
