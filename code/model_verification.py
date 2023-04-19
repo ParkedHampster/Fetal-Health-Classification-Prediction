@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+
+from IPython.display import Markdown
 from sklearn.metrics import confusion_matrix, \
                             recall_score, accuracy_score, \
                             roc_curve, roc_auc_score, \
@@ -12,7 +14,8 @@ from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 
 def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,
-        scoring='recall_macro',figsize=(14,8),**kwargs):
+        scoring='recall_macro',figsize=(14,8),multi_class='ovr',is_binary=False,
+        **kwargs):
     """_summary_
     model: model with a .predict() method
         the model being used for predictions and scoring
@@ -53,16 +56,19 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     """
     predictions = model.predict(X)
     proba_predictions = model.predict_proba(X)
+    if is_binary:
+        proba_predictions = proba_predictions[:,1]
+
     print(f"""
 Model recall:         {(recall := recall_score(y,predictions,average=average))}
-Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class='ovr',average=average))}
+Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class=multi_class,average=average))}
 Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scoring)).mean()}
     """)
 
     # multi-class roc_plot modified from sample in sklearn
     # documentation, available here:
     #  https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html#roc-curve-using-the-ovr-macro-average
-    if plot_curve:
+    if (plot_curve & (not is_binary)):
         n_classes = len(np.unique(y))
         ohe = pd.get_dummies(y).values
         if ax==None:
@@ -81,7 +87,51 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
             ylabel="True Positive Rate",
             xlabel="False Positive Rate"
         )
-    return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score}
+    elif (plot_curve & is_binary):
+        if ax==None:
+            fig, ax = plt.subplots(figsize=figsize)
+        if class_names==None:
+            class_names = str(np.unique(y))
+        RocCurveDisplay.from_predictions(
+            y,
+            proba_predictions,
+            ax=ax,
+            name=f"ROC curve for {class_names[1].title()}"
+            )
+        ax.set(
+            title="ROC One-v-Rest Multiclass",
+            ylabel="True Positive Rate",
+            xlabel="False Positive Rate"
+        )
+    return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score, 'ax':ax}
 
-def model_scoring_table():
-    return
+
+
+def model_scoring_table(model_results,model_names):
+
+    assert len(model_results) == len(model_names)
+
+    results_df = pd.DataFrame(model_results)
+    results_df['cv_mean'] = results_df['cv_score'].map(lambda x: x.mean())
+    tbody = ""
+    max_recall = round(results_df['recall'].max(),3)
+    max_rocauc = round(results_df['rocauc'].max(),3)
+    max_cv_score = round((results_df['cv_mean']).max(),3)
+
+    for i, name in enumerate(model_names):
+        recstar = '**' if round(model_results[i]['recall'],3) == max_recall else ' '
+        rocstar = '**' if round(model_results[i]['rocauc'],3) == max_rocauc else ' '
+        cv_star = '***' if round(model_results[i]['cv_score'].mean(),3) == max_cv_score else ' '
+        tbody += f"""| {name} | {
+    recstar }{ model_results[i]['recall'] :.3f}{ recstar
+    } | {
+    rocstar }{ model_results[i]['rocauc'] :.3f}{ rocstar
+    } | {
+    cv_star }{ model_results[i]['cv_score'].mean() :.3f}{ cv_star
+    } |
+"""
+    table_string = f"""
+| Model | Recall | ROC AUC | CV Score |
+|---:|:---:|:---:|:---:|
+{tbody}"""
+    return {'md':Markdown(table_string), 'df':results_df}
