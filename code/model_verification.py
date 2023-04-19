@@ -68,41 +68,33 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
     # multi-class roc_plot modified from sample in sklearn
     # documentation, available here:
     #  https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html#roc-curve-using-the-ovr-macro-average
-    if (plot_curve & (not is_binary)):
-        n_classes = len(np.unique(y))
-        ohe = pd.get_dummies(y).values
+    if plot_curve:
         if ax==None:
             fig, ax = plt.subplots(figsize=figsize)
         if class_names==None:
             class_names = str(np.unique(y))
-        for class_id in range(n_classes):
+        if is_binary:
             RocCurveDisplay.from_predictions(
-                ohe[:,class_id],
-                proba_predictions[:,class_id],
+                y,
+                proba_predictions,
                 ax=ax,
-                name=f"ROC curve for {class_names[class_id].title()}"
+                name=f"ROC curve for {class_names[1].title()}"
                 )
-        ax.set(
-            title="ROC One-v-Rest Multiclass",
-            ylabel="True Positive Rate",
-            xlabel="False Positive Rate"
-        )
-    elif (plot_curve & is_binary):
-        if ax==None:
-            fig, ax = plt.subplots(figsize=figsize)
-        if class_names==None:
-            class_names = str(np.unique(y))
-        RocCurveDisplay.from_predictions(
-            y,
-            proba_predictions,
-            ax=ax,
-            name=f"ROC curve for {class_names[1].title()}"
-            )
-        ax.set(
-            title="ROC One-v-Rest Multiclass",
-            ylabel="True Positive Rate",
-            xlabel="False Positive Rate"
-        )
+        elif not is_binary:
+            n_classes = len(np.unique(y))
+            ohe = pd.get_dummies(y).values
+            for class_id in range(n_classes):
+                RocCurveDisplay.from_predictions(
+                    ohe[:,class_id],
+                    proba_predictions[:,class_id],
+                    ax=ax,
+                    name=f"ROC curve for {class_names[class_id].title()}"
+                    )
+    ax.set(
+        title="ROC One-v-Rest Multiclass",
+        ylabel="True Positive Rate",
+        xlabel="False Positive Rate"
+    )
     return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score, 'ax':ax}
 
 
