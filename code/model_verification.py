@@ -90,11 +90,11 @@ Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scor
                     ax=ax,
                     name=f"ROC curve for {class_names[class_id].title()}"
                     )
-    ax.set(
-        title="ROC One-v-Rest Multiclass",
-        ylabel="True Positive Rate",
-        xlabel="False Positive Rate"
-    )
+        ax.set(
+            title="ROC One-v-Rest Multiclass",
+            ylabel="True Positive Rate",
+            xlabel="False Positive Rate"
+        )
     return {'recall':recall, 'rocauc':rocauc, 'cv_score':cv_score, 'ax':ax}
 
 
@@ -104,22 +104,23 @@ def model_scoring_table(model_results,model_names):
     assert len(model_results) == len(model_names)
 
     results_df = pd.DataFrame(model_results)
+    results_df['names'] = model_names
     results_df['cv_mean'] = results_df['cv_score'].map(lambda x: x.mean())
     tbody = ""
     max_recall = round(results_df['recall'].max(),3)
     max_rocauc = round(results_df['rocauc'].max(),3)
     max_cv_score = round((results_df['cv_mean']).max(),3)
-
+    
     for i, name in enumerate(model_names):
-        recstar = '**' if round(model_results[i]['recall'],3) == max_recall else ' '
-        rocstar = '**' if round(model_results[i]['rocauc'],3) == max_rocauc else ' '
-        cv_star = '***' if round(model_results[i]['cv_score'].mean(),3) == max_cv_score else ' '
+        recstar = '**' if round(results_df.iloc[i]['recall'],3) == max_recall else ' '
+        rocstar = '**' if round(results_df.iloc[i]['rocauc'],3) == max_rocauc else ' '
+        cv_star = '***' if round(results_df.iloc[i]['cv_score'].mean(),3) == max_cv_score else ' '
         tbody += f"""| {name} | {
-    recstar }{ model_results[i]['recall'] :.3f}{ recstar
+    recstar }{ results_df.iloc[i]['recall'] :.3f}{ recstar
     } | {
-    rocstar }{ model_results[i]['rocauc'] :.3f}{ rocstar
+    rocstar }{ results_df.iloc[i]['rocauc'] :.3f}{ rocstar
     } | {
-    cv_star }{ model_results[i]['cv_score'].mean() :.3f}{ cv_star
+    cv_star }{ results_df.iloc[i]['cv_mean'] :.3f}{ cv_star
     } |
 """
     table_string = f"""
