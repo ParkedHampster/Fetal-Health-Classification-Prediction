@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,
         scoring='recall_macro',figsize=(14,8),multi_class='ovr',is_binary=False,
-        **kwargs):
+        print_scores=True,**kwargs):
     """_summary_
     model: model with a .predict() method
         the model being used for predictions and scoring
@@ -59,11 +59,13 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     if is_binary:
         proba_predictions = proba_predictions[:,1]
 
-    print(f"""
+    scores_info= f"""
 Model recall:         {(recall := recall_score(y,predictions,average=average))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class=multi_class,average=average))}
 Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scoring)).mean()}
-    """)
+    """
+    if print_scores:
+        print(scores_info)
 
     # multi-class roc_plot modified from sample in sklearn
     # documentation, available here:
