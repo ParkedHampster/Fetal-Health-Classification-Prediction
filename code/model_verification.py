@@ -78,9 +78,13 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     if is_binary:
         proba_predictions = proba_predictions[:,1]
         multi_class = 'raise'
-
+        rec_avg = 'binary'
+        scoring = 'recall'
+    else:
+        rec_avg = average
+    print(rec_avg)
     scores_info= f"""
-Model recall:         {(recall := recall_score(y,predictions,average=average))}
+Model recall:         {(recall := recall_score(y,predictions,average=rec_avg))}
 Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class=multi_class,average=average))}
 Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scoring)).mean()}
     """
