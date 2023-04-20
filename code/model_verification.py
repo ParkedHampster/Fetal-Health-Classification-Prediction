@@ -6,12 +6,16 @@ from sklearn.metrics import confusion_matrix, \
                             recall_score, accuracy_score, \
                             roc_curve, roc_auc_score, \
                             auc, \
-                            RocCurveDisplay, ConfusionMatrixDisplay
+                            RocCurveDisplay, ConfusionMatrixDisplay, \
+                            make_scorer
 from sklearn.model_selection import cross_val_score
 
 # from yellowbrick.classifier import ROCAUC
 # from yellowbrick.classifier.rocauc import roc_auc
 import matplotlib.pyplot as plt
+
+def custom_scorer(y,y_pred,**kwargs):
+    return (recall_score(y,y_pred,average=None)[1:]).mean()
 
 def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=None,cv=5,
         scoring='recall_macro',figsize=(14,8),multi_class='ovr',is_binary=False,
@@ -78,15 +82,16 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
     if is_binary:
         proba_predictions = proba_predictions[:,1]
         multi_class = 'raise'
-        rec_avg = 'binary'
         scoring = 'recall'
+        recall = recall_score(y,predictions,average='binary')
+        cv_score= (cross_val_score(model,X,y,cv=cv,scoring=scoring))
     else:
-        rec_avg = average
-    print(rec_avg)
+        recall = (recall_score(y,predictions,average=None)[1:]).mean()
+        cv_score= (cross_val_score(model,X,y,cv=cv,scoring=make_scorer(custom_scorer)))
     scores_info= f"""
-Model recall:         {(recall := recall_score(y,predictions,average=rec_avg))}
-Median ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class=multi_class,average=average))}
-Cross Val Score:      {(cv_score := cross_val_score(model,X,y,cv=cv,scoring=scoring)).mean()}
+Model recall:       {(recall)}
+Mean ROC AUC score: {(rocauc := roc_auc_score(y,proba_predictions, multi_class=multi_class,average=average))}
+Cross Val Score:    {(cv_score.mean())}
     """
     if print_scores:
         print(scores_info)
