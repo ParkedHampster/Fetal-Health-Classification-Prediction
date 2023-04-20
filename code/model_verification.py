@@ -72,7 +72,6 @@ def model_scoring(model,X,y,average=None,plot_curve=False,ax=None,class_names=No
                 - cv_score is an array of scores
                 - ax is the resulting pyplot ax for
                     limited use later.
-
     """
     predictions = model.predict(X)
     proba_predictions = model.predict_proba(X)
