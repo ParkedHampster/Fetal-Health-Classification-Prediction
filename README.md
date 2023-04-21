@@ -230,11 +230,8 @@ percentages for all of our targets in the data set.
 | Pathological  | 176       | 08.3% |
 
 
-From the [description of values in the dataset](./data/fetal_health_descriptions.md),
-the values are heavily imbalanced in favor of "Normal" health.
-1. Normal
-2. Suspect
-3. Pathological
+The values are heavily imbalanced in favor of "Normal"
+health.
 
 ## Determining the measure
 
@@ -255,6 +252,11 @@ pregnancy is showing potential signs of issues.
 We created a train test split of 80% train and 20% test
 for comparing our data against.
 
+Our y values will be the health status of the fetus and
+our X values will be everything else. No need to drop
+any columns in this case as all of the data seems to be
+important.
+
 ## Creating and Validating the Dummy Model
 Our dummy model produces a confusion matrix that looks
 like the image below.
@@ -263,11 +265,11 @@ like the image below.
 ![dummy model confusion matrix estimating all results as healthy](./img/README_29_0.png)
     
 With these scores:
-
-    Model recall:       0.0
-    Mean ROC AUC score: 0.5
-    Cross Val Score:    0.0
-        
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.0 |
+| Mean ROC AUC score: | 0.5 |
+| Cross Val Score:    | 0.0 |
 
 
 Visually, we can see that the 2 labels we care about are
@@ -303,27 +305,19 @@ the last section.
 Let's go ahead and get a confusion matrix like we did
 for the dummy model earlier
 
-    
 ![png](./img/README_37_0.png)
-    
-
 
 We actually see some really good results immediately,
 but we want to make sure that our cross-val score is
 also representative of this.
 
-    
-    Model recall:       0.9879793244380335
-    Mean ROC AUC score: 0.9980725145473125
-    Cross Val Score:    0.8501569978688467
-        
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9879793244380335 |
+| Mean ROC AUC score: | 0.9980725145473125 |
+| Cross Val Score:    | 0.8501569978688467 |
 
-
-
-    
 ![png](./img/README_39_1.png)
-    
-
 
 This model is showing 100% in all categories for its
 ROC AUC predictions, which is... suspicious. It's very likely
@@ -348,18 +342,13 @@ perform.
 And here we'll check how this model is scoring across a
 few default scoring metrics.
 
-    
-    Model recall:       0.9922166125736267
-    Mean ROC AUC score: 0.9993629010696551
-    Cross Val Score:    0.8232601404464941
-        
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9922166125736267 |
+| Mean ROC AUC score: | 0.9993629010696551 |
+| Cross Val Score:    | 0.8232601404464941 |
 
-
-
-    
 ![png](./img/README_47_1.png)
-    
-
 
 This model is still showing an AUC of 1 on _**ALL**_
 targets. Additionally, the cross val score is much 
@@ -376,94 +365,26 @@ prioritizing our training data set as much as it can.
 
 ### Showing that the features are not generalizing well:
 
-
-```python
-fig, ax = plt.subplots(figsize=(18,8))
-
-sns.heatmap(np.abs(fetal_df.corr())[:-1][['fetal_health']],square=True,ax=ax,
-yticklabels=True)
-
-ax.yaxis.set_minor_locator(MaxNLocator(integer=True,nbins=len(clean_titles)-1))
-ax.set_yticklabels(
-    clean_titles[:-1],fontsize=10)
-ax.set(
-    title="Fetal Health Feature Heat Map\n",
-    xticklabels=['Fetal Health']
-)
-
-'';
-```
-
-
-    
 ![png](./img/README_50_0.png)
-    
 
 
 Here, we can see that there are a handful of features
 that are effecting the target values more than others.
 
-Here, we'll extract the 5 features of highest
+Here, we've extracted the 5 features of highest
 importance according to our heat map and .corr()
 values.
 
-
-```python
-# sort_values defaults to lowest-to-highest, will use
-# .tail instead of ascending=False 
-highest_effect = list((abs_corr_eff := np.abs(fetal_df.corr()[:-1]['fetal_health']).sort_values()).tail().index)
-highest_effect, abs_corr_eff
-```
-
-
-
-
-    (['histogram_mode',
-      'accelerations',
-      'percentage_of_time_with_abnormal_long_term_variability',
-      'abnormal_short_term_variability',
-      'prolongued_decelerations'],
-     histogram_number_of_zeroes                                0.016682
-     histogram_number_of_peaks                                 0.023666
-     histogram_max                                             0.045265
-     light_decelerations                                       0.058870
-     histogram_min                                             0.063175
-     histogram_width                                           0.068789
-     fetal_movement                                            0.088010
-     mean_value_of_short_term_variability                      0.103382
-     severe_decelerations                                      0.131934
-     histogram_tendency                                        0.131976
-     baseline value                                            0.148151
-     uterine_contractions                                      0.204894
-     histogram_median                                          0.205033
-     histogram_variance                                        0.206630
-     mean_value_of_long_term_variability                       0.226797
-     histogram_mean                                            0.226985
-     histogram_mode                                            0.250412
-     accelerations                                             0.364066
-     percentage_of_time_with_abnormal_long_term_variability    0.426146
-     abnormal_short_term_variability                           0.471191
-     prolongued_decelerations                                  0.484859
-     Name: fetal_health, dtype: float64)
-
-
+These are:
+- histogram_mode
+- accelerations
+- percentage_of_time_with_abnormal_long_term_variability
+- abnormal_short_term_variability
+- prolongued_decelerations
 
 After extracting the 5 values with the highest 
 influence on the data, we'll create a new model that
 only takes these features into account when training.  
-We'll create an X_test variable for use later as well.
-
-
-```python
-X_train_top_features = X_train[highest_effect]
-X_test_top_features  = X_test[highest_effect]
-
-# verifying the shape
-X_train_top_features.head()
-```
-
-
-
 
 <div>
 <style scoped>
@@ -535,86 +456,17 @@ X_train_top_features.head()
 </table>
 </div>
 
+Here are the results of that process:
 
-
-...and we'll create the relative pipelines for the same
-data
-
-
-```python
-reduced_knn_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
-
-    ('knn',KNeighborsClassifier(n_neighbors=5, n_jobs=-2))
-])
-
-reduced_knn_pipeline.fit(X_train_top_features,y_train)
-
-fig, ax = plt.subplots()
-
-ConfusionMatrixDisplay.from_estimator(
-            reduced_knn_pipeline,X_train_top_features,y_train,
-            ax=ax);
-
-ax.set(
-    title="Reduced KNN Confusion Matrix",
-    yticklabels=health_labels,
-    xticklabels=health_labels
-)
-ax.grid(False)
-
-plt.xticks(rotation=45)
-
-'';
-```
-
-
-    
 ![png](./img/README_56_0.png)
-    
 
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9816233922346436 |
+| Mean ROC AUC score: | 0.9974224386560683 |
+| Cross Val Score:    | 0.8698315166125143 |
 
-
-```python
-fig, ax = plt.subplots(figsize=(18,8))
-
-scores_reduced_knn_initial = model_scoring(
-    reduced_knn_pipeline,X_train_top_features,y_train,average='macro',
-                        plot_curve=True, ax=ax,
-                        class_names=health_labels
-    
-)
-```
-
-    
-    Model recall:       0.9816233922346436
-    Mean ROC AUC score: 0.9974224386560683
-    Cross Val Score:    0.8698315166125143
-        
-
-
-
-    
 ![png](./img/README_57_1.png)
-    
-
-
-
-```python
-scores_reduced_knn_initial
-```
-
-
-
-
-    {'recall': 0.9816233922346436,
-     'rocauc': 0.9974224386560683,
-     'cv_score': array([0.87917933, 0.8468845 , 0.87196049, 0.8672047 , 0.88392857]),
-     'ax': <AxesSubplot:title={'center':'ROC One-v-Rest Multiclass'}, xlabel='False Positive Rate', ylabel='True Positive Rate'>}
-
-
 
 This model actually has a 2% increase in CV score so we
 should mark it as our best model so far. 2% is a small
@@ -626,83 +478,13 @@ grid search, so we don't have to define new params. If
 we detect the model picking edges, we can investigate
 those params further.
 
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9837420363024402 |
+| Mean ROC AUC score: | 0.9989318598805665 |
+| Cross Val Score:    | 0.8604793348006847 |
 
-```python
-
-knn_reduced_gs = GridSearchCV(
-    reduced_knn_pipeline,
-    param_grid=knn_params,
-    n_jobs=-2,verbose=3
-)
-```
-
-
-```python
-knn_reduced_gs.fit(X_train_top_features,y_train)
-```
-
-    Fitting 5 folds for each of 18 candidates, totalling 90 fits
-
-
-
-
-
-<style>#sk-container-id-4 {color: black;background-color: white;}#sk-container-id-4 pre{padding: 0;}#sk-container-id-4 div.sk-toggleable {background-color: white;}#sk-container-id-4 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-4 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-4 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-4 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-4 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-4 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-4 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-4 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-4 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-4 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-4 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-4 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-4 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-4 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-4 div.sk-item {position: relative;z-index: 1;}#sk-container-id-4 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-4 div.sk-item::before, #sk-container-id-4 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-4 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-4 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-4 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-4 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-4 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-4 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-4 div.sk-label-container {text-align: center;}#sk-container-id-4 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-4 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-4" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;o&#x27;, SMOTE(random_state=1)),
-                                       (&#x27;knn&#x27;,
-                                        KNeighborsClassifier(n_jobs=-2))]),
-             n_jobs=-2,
-             param_grid={&#x27;knn__n_neighbors&#x27;: [3, 5, 7], &#x27;knn__p&#x27;: [1, 2, 3],
-                         &#x27;o__sampling_strategy&#x27;: [&#x27;auto&#x27;, &#x27;all&#x27;]},
-             verbose=3)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-11" type="checkbox" ><label for="sk-estimator-id-11" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;o&#x27;, SMOTE(random_state=1)),
-                                       (&#x27;knn&#x27;,
-                                        KNeighborsClassifier(n_jobs=-2))]),
-             n_jobs=-2,
-             param_grid={&#x27;knn__n_neighbors&#x27;: [3, 5, 7], &#x27;knn__p&#x27;: [1, 2, 3],
-                         &#x27;o__sampling_strategy&#x27;: [&#x27;auto&#x27;, &#x27;all&#x27;]},
-             verbose=3)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-12" type="checkbox" ><label for="sk-estimator-id-12" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;knn&#x27;, KNeighborsClassifier(n_jobs=-2))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-13" type="checkbox" ><label for="sk-estimator-id-13" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-14" type="checkbox" ><label for="sk-estimator-id-14" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-15" type="checkbox" ><label for="sk-estimator-id-15" class="sk-toggleable__label sk-toggleable__label-arrow">KNeighborsClassifier</label><div class="sk-toggleable__content"><pre>KNeighborsClassifier(n_jobs=-2)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
-
-
-
-
-```python
-knn_reduced_gs.best_params_, knn_reduced_gs.best_estimator_
-```
-
-
-
-
-    ({'knn__n_neighbors': 3, 'knn__p': 1, 'o__sampling_strategy': 'auto'},
-     Pipeline(steps=[('ss', StandardScaler()), ('o', SMOTE(random_state=1)),
-                     ('knn', KNeighborsClassifier(n_jobs=-2, n_neighbors=3, p=1))]))
-
-
-
-
-```python
-fig, ax = plt.subplots(figsize=(14,8))
-
-scores_best_knn_reduced = model_scoring(
-    knn_reduced_gs.best_estimator_,
-    X_train_top_features,y_train,average='macro',
-    plot_curve=True,ax=ax,class_names=health_labels
-)
-```
-
-    
-    Model recall:       0.9837420363024402
-    Mean ROC AUC score: 0.9989318598805665
-    Cross Val Score:    0.8604793348006847
-        
-
-
-
-    
 ![png](./img/README_64_1.png)
-    
-
 
 The grid search actually takes the model down just a
 bit, so we'll keep the prior model based on CV score.
@@ -715,25 +497,6 @@ what exactly is happening with all of the scores. This
 is a step that will be taken each time we complete a
 few steps in changing the models to see our progress.
 
-
-```python
-display(model_scoring_table(
-    [
-        scores_knn_initial,
-        scores_best_knn_initial,
-        scores_reduced_knn_initial,
-        scores_best_knn_reduced
-    ],[
-        'KNN Initial',
-        'Grid Searched KNN',
-        'KNN Initial Reduced',
-        'Grid Searched KNN Reduced'
-    ]
-)['md'])
-```
-
-
-
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
 | KNN Initial |  0.988  |  0.998  |  0.850  |
@@ -741,67 +504,7 @@ display(model_scoring_table(
 | KNN Initial Reduced |  0.982  |  0.997  | ***0.870*** |
 | Grid Searched KNN Reduced |  0.984  | **0.999** |  0.860  |
 
-
-
-
-```python
-knn_reduced_gs.best_params_
-```
-
-
-
-
-    {'knn__n_neighbors': 3, 'knn__p': 1, 'o__sampling_strategy': 'auto'}
-
-
-
-
-```python
-fig, ax = plt.subplots(2,2,figsize=(14,14),
-                        sharey=True,sharex=True)
-
-ConfusionMatrixDisplay.from_estimator(
-            initial_knn_pipeline.fit(X_train,y_train),X_train,y_train,ax=ax[0,0])
-ConfusionMatrixDisplay.from_estimator(
-            knn_gs,X_train,y_train,ax=ax[0,1])
-ConfusionMatrixDisplay.from_estimator(
-            reduced_knn_pipeline.fit(X_train_top_features,y_train),X_train_top_features,y_train,ax=ax[1,0])
-ConfusionMatrixDisplay.from_estimator(
-            knn_reduced_gs,X_train_top_features,y_train,ax=ax[1,1])
-
-ax[0,0].set(
-    title='Initial KNN Model'
-)
-ax[0,1].set(
-    title='Grid Searched KNN Model'
-)
-ax[1,0].set(
-    title='Reduced KNN Model'
-)
-ax[1,1].set(
-    title='Grid Searched Reduced\nKNN Model'
-)
-
-for ax_ in ax.flatten():
-    ax_.grid(False)
-    ax_.set(
-        xticklabels=health_labels,
-        yticklabels=health_labels
-    )
-    ax_.xaxis.set_tick_params(rotation=45)
-
-
-fig.suptitle("KNN Confusion Matrices")
-
-plt.tight_layout()
-'';
-```
-
-
-    
 ![png](./img/README_70_0.png)
-    
-
 
 These models are starting to take shape and look pretty
 decent, but we want to make them as good of models as
@@ -813,102 +516,20 @@ lieu of keeping our neighbors so low. We'll keep all
 of our other options the same for the meantime and we
 can perform the grid search through the same process.
 
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9936440677966102 |
+| Mean ROC AUC score: | 0.9999926511240845 |
+| Cross Val Score:    | 0.8562240156517487 |
 
-```python
-knn_params_weighted = knn_params
-knn_params_weighted['knn__weights'] = ['uniform','distance']
-
-knn_reduced_gs_weighted = GridSearchCV(
-    reduced_knn_pipeline,
-    param_grid=knn_params_weighted,
-    n_jobs=-2,verbose=3
-)
-```
-
-
-```python
-knn_reduced_gs_weighted.fit(X_train_top_features,y_train)
-knn_reduced_gs_weighted.best_params_
-```
-
-    Fitting 5 folds for each of 36 candidates, totalling 180 fits
-
-
-
-
-
-    {'knn__n_neighbors': 3,
-     'knn__p': 1,
-     'knn__weights': 'distance',
-     'o__sampling_strategy': 'auto'}
-
-
-
-
-```python
-scores_reduced_knn_gs_weighted = model_scoring(knn_reduced_gs_weighted.best_estimator_,
-                X_train_top_features,y_train,
-                average='macro',plot_curve=True,
-                class_names=health_labels);
-```
-
-    
-    Model recall:       0.9936440677966102
-    Mean ROC AUC score: 0.9999926511240845
-    Cross Val Score:    0.8562240156517487
-        
-
-
-
-    
 ![png](./img/README_74_1.png)
-    
 
-
-
-```python
-fig, ax = plt.subplots()
-ConfusionMatrixDisplay.from_estimator(knn_reduced_gs_weighted,
-                        X_train_top_features,y_train,ax=ax)
-
-ax.set(
-    title="Distance-Weighted KNN Model\nwith Grid Search Confusion Matrix",
-    xticklabels=health_labels,
-    yticklabels=health_labels
-)
-ax.grid(False)
-plt.xticks(rotation=45)
-'';
-```
-
-
-    
 ![png](./img/README_75_0.png)
-    
-
-
-
-```python
-display(model_scoring_table(
-    [
-        scores_reduced_knn_initial,
-        scores_reduced_knn_gs_weighted
-    ],[
-        'Initial KNN Reduced',
-        'Distance-Weighted KNN Reduced'
-        
-    ]
-)['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
 | Initial KNN Reduced |  0.982  |  0.997  | ***0.870*** |
 | Distance-Weighted KNN Reduced | **0.994** | **1.000** |  0.856  |
-
-
 
 The CV score for the previous model is still better
 than the score for this model. It looks like this model
@@ -930,79 +551,15 @@ data set isn't in the tens or hundreds of thousands, we
 shouldn't see much issue in terms of performance here
 over a regular decision tree.
 
-
-```python
-initial_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
-
-    ('rfc',RandomForestClassifier(random_state=1,
-                max_depth=5, n_jobs=-2))
-])
-initial_tree_pipeline.fit(X_train,y_train)
-```
-
-
-
-
-<style>#sk-container-id-5 {color: black;background-color: white;}#sk-container-id-5 pre{padding: 0;}#sk-container-id-5 div.sk-toggleable {background-color: white;}#sk-container-id-5 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-5 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-5 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-5 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-5 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-5 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-5 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-5 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-5 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-5 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-5 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-5 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-5 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-5 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-5 div.sk-item {position: relative;z-index: 1;}#sk-container-id-5 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-5 div.sk-item::before, #sk-container-id-5 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-5 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-5 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-5 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-5 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-5 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-5 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-5 div.sk-label-container {text-align: center;}#sk-container-id-5 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-5 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-5" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(max_depth=5, n_jobs=-2,
-                                        random_state=1))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-16" type="checkbox" ><label for="sk-estimator-id-16" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(max_depth=5, n_jobs=-2,
-                                        random_state=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-17" type="checkbox" ><label for="sk-estimator-id-17" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-18" type="checkbox" ><label for="sk-estimator-id-18" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-19" type="checkbox" ><label for="sk-estimator-id-19" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier(max_depth=5, n_jobs=-2, random_state=1)</pre></div></div></div></div></div></div></div>
-
-
-
-
-```python
-fig, ax = plt.subplots()
-ConfusionMatrixDisplay.from_estimator(initial_tree_pipeline,X_train,y_train,
-                        ax=ax);
-ax.set(
-    title="Initial Random Forest Confusion Matrix",
-    xticklabels=health_labels,
-    yticklabels=health_labels
-)
-ax.grid(False)
-plt.xticks(rotation=45)
-'';
-```
-
-
-    
 ![png](./img/README_81_0.png)
-    
 
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9363505228993869 |
+| Mean ROC AUC score: | 0.9849576125520768 |
+| Cross Val Score:    | 0.8556759424239248 |
 
-
-```python
-fig, ax = plt.subplots(figsize=(14,8))
-scores_tree_initial = model_scoring(initial_tree_pipeline,X_train,y_train,average='macro',
-                        plot_curve=True, ax=ax,
-                        class_names=health_labels)
-
-ax.set(
-    title="Initial Random Forest " + ax.title.get_text() + "\non Training Data"
-)
-
-'';
-```
-
-    
-    Model recall:       0.9363505228993869
-    Mean ROC AUC score: 0.9849576125520768
-    Cross Val Score:    0.8556759424239248
-        
-
-
-
-    
 ![png](./img/README_82_1.png)
-    
-
 
 Our recall score does go down here, but our cv score is
 pretty similar, being down by about 1%. This means that
@@ -1015,67 +572,13 @@ much a model worth investigating.
 
 We'll run a grid search just like before.
 
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9667478062267099 |
+| Mean ROC AUC score: | 0.9934588937750992 |
+| Cross Val Score:    | 0.8919094783915034 |
 
-```python
-tree_params = {
-    'o__sampling_strategy':['auto','all'],
-    'rfc__max_depth': [3,5,7],
-    'rfc__min_samples_split': [2,4,6]
-}
-```
-
-
-```python
-tree_gs = GridSearchCV(
-    initial_tree_pipeline,
-    param_grid=tree_params,
-    n_jobs=-2, verbose=3
-)
-```
-
-
-```python
-tree_gs.fit(X_train,y_train)
-tree_gs.best_params_
-```
-
-    Fitting 5 folds for each of 18 candidates, totalling 90 fits
-
-
-
-
-
-    {'o__sampling_strategy': 'auto',
-     'rfc__max_depth': 7,
-     'rfc__min_samples_split': 4}
-
-
-
-
-```python
-fig, ax = plt.subplots(figsize=(12,8))
-scores_best_tree_initial = model_scoring(
-    tree_gs.best_estimator_,X_train,y_train,average='macro',
-                        plot_curve=True, ax=ax,
-                        class_names=health_labels)
-
-ax.set(
-    title="Random Forest " + ax.title.get_text() + "\nOn Training Data"
-);
-```
-
-    
-    Model recall:       0.9667478062267099
-    Mean ROC AUC score: 0.9934588937750992
-    Cross Val Score:    0.8919094783915034
-        
-
-
-
-    
 ![png](./img/README_87_1.png)
-    
-
 
 Our CV score went up a pretty decent amount here and
 even reduced over fit by a bit at the same time! Our
@@ -1088,55 +591,13 @@ tree look at the same subset that our KNN model did to
 get a good comparison between the classifications of
 both.
 
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9349230676764034 |
+| Mean ROC AUC score: | 0.9808657978120546 |
+| Cross Val Score:    | 0.8947181899171994 |
 
-```python
-reduced_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
-
-    ('rfc',RandomForestClassifier(random_state=1,
-                max_depth=5, n_jobs=-2))
-])
-reduced_tree_pipeline.fit(X_train_top_features,y_train)
-```
-
-
-
-
-<style>#sk-container-id-6 {color: black;background-color: white;}#sk-container-id-6 pre{padding: 0;}#sk-container-id-6 div.sk-toggleable {background-color: white;}#sk-container-id-6 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-6 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-6 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-6 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-6 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-6 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-6 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-6 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-6 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-6 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-6 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-6 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-6 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-6 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-6 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-6 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-6 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-6 div.sk-item {position: relative;z-index: 1;}#sk-container-id-6 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-6 div.sk-item::before, #sk-container-id-6 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-6 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-6 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-6 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-6 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-6 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-6 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-6 div.sk-label-container {text-align: center;}#sk-container-id-6 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-6 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-6" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(max_depth=5, n_jobs=-2,
-                                        random_state=1))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-20" type="checkbox" ><label for="sk-estimator-id-20" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(max_depth=5, n_jobs=-2,
-                                        random_state=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-21" type="checkbox" ><label for="sk-estimator-id-21" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-22" type="checkbox" ><label for="sk-estimator-id-22" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-23" type="checkbox" ><label for="sk-estimator-id-23" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier(max_depth=5, n_jobs=-2, random_state=1)</pre></div></div></div></div></div></div></div>
-
-
-
-
-```python
-fig,ax = plt.subplots(figsize=(14,8))
-scores_reduced_tree_initial = model_scoring(
-    reduced_tree_pipeline,
-    X_train_top_features,y_train,
-    average='macro',plot_curve=True,ax=ax,
-    class_names=health_labels
-)
-```
-
-    
-    Model recall:       0.9349230676764034
-    Mean ROC AUC score: 0.9808657978120546
-    Cross Val Score:    0.8947181899171994
-        
-
-
-
-    
 ![png](./img/README_91_1.png)
-    
-
 
 Our cross val score went up by a little bit, measuring
 in the tenths of percentage points, but it's still
@@ -1145,92 +606,15 @@ worth noting.
 Let's go ahead and take another grid search using the
 same parameters as before.
 
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9596556076451497 |
+| Mean ROC AUC score: | 0.9902798704926536 |
+| Cross Val Score:    | 0.8990966617754953 |
 
-```python
-reduced_tree_gs = GridSearchCV(
-    reduced_tree_pipeline,
-    param_grid=tree_params,
-    n_jobs=-2, verbose=3)
-reduced_tree_gs.fit(X_train_top_features,y_train)
-```
-
-    Fitting 5 folds for each of 18 candidates, totalling 90 fits
-
-
-
-
-
-<style>#sk-container-id-7 {color: black;background-color: white;}#sk-container-id-7 pre{padding: 0;}#sk-container-id-7 div.sk-toggleable {background-color: white;}#sk-container-id-7 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-7 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-7 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-7 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-7 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-7 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-7 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-7 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-7 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-7 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-7 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-7 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-7 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-7 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-7 div.sk-item {position: relative;z-index: 1;}#sk-container-id-7 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-7 div.sk-item::before, #sk-container-id-7 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-7 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-7 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-7 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-7 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-7 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-7 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-7 div.sk-label-container {text-align: center;}#sk-container-id-7 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-7 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-7" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;o&#x27;, SMOTE(random_state=1)),
-                                       (&#x27;rfc&#x27;,
-                                        RandomForestClassifier(max_depth=5,
-                                                               n_jobs=-2,
-                                                               random_state=1))]),
-             n_jobs=-2,
-             param_grid={&#x27;o__sampling_strategy&#x27;: [&#x27;auto&#x27;, &#x27;all&#x27;],
-                         &#x27;rfc__max_depth&#x27;: [3, 5, 7],
-                         &#x27;rfc__min_samples_split&#x27;: [2, 4, 6]},
-             verbose=3)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-24" type="checkbox" ><label for="sk-estimator-id-24" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;o&#x27;, SMOTE(random_state=1)),
-                                       (&#x27;rfc&#x27;,
-                                        RandomForestClassifier(max_depth=5,
-                                                               n_jobs=-2,
-                                                               random_state=1))]),
-             n_jobs=-2,
-             param_grid={&#x27;o__sampling_strategy&#x27;: [&#x27;auto&#x27;, &#x27;all&#x27;],
-                         &#x27;rfc__max_depth&#x27;: [3, 5, 7],
-                         &#x27;rfc__min_samples_split&#x27;: [2, 4, 6]},
-             verbose=3)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-25" type="checkbox" ><label for="sk-estimator-id-25" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(max_depth=5, n_jobs=-2,
-                                        random_state=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-26" type="checkbox" ><label for="sk-estimator-id-26" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-27" type="checkbox" ><label for="sk-estimator-id-27" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-28" type="checkbox" ><label for="sk-estimator-id-28" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier(max_depth=5, n_jobs=-2, random_state=1)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
-
-
-
-
-```python
-fig, ax = plt.subplots(figsize=(14,8))
-scores_best_tree_reduced = model_scoring(
-    reduced_tree_gs.best_estimator_,
-    X_train_top_features,y_train,
-    average='macro',
-    plot_curve=True,
-    ax=ax, class_names=health_labels
-)
-```
-
-    
-    Model recall:       0.9596556076451497
-    Mean ROC AUC score: 0.9902798704926536
-    Cross Val Score:    0.8990966617754953
-        
-
-
-
-    
 ![png](./img/README_95_1.png)
-    
-
 
 And again, we'll compare the models.
-
-
-```python
-display_table = model_scoring_table([
-    scores_tree_initial,
-    scores_best_tree_initial,
-    scores_reduced_tree_initial,
-    scores_best_tree_reduced
-],[
-    'Forest Initial',
-    'Grid Searched Initial Forest',
-    'Forest Initial Reduced',
-    'Grid Searched Forest Reduced'
-    ])
-display(display_table['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -1239,59 +623,7 @@ display(display_table['md'])
 | Forest Initial Reduced |  0.935  |  0.981  |  0.895  |
 | Grid Searched Forest Reduced |  0.960  |  0.990  | ***0.899*** |
 
-
-
-
-```python
-fig, ax = plt.subplots(2,2,figsize=(14,14),
-                        sharex=True,sharey=True)
-
-ConfusionMatrixDisplay.from_estimator(
-            initial_tree_pipeline.fit(X_train,y_train),X_train,y_train,ax=ax[0,0])
-ConfusionMatrixDisplay.from_estimator(
-            tree_gs,X_train,y_train,ax=ax[0,1])
-ConfusionMatrixDisplay.from_estimator(
-            reduced_tree_pipeline.fit(X_train_top_features,y_train),X_train_top_features,y_train,ax=ax[1,0])
-ConfusionMatrixDisplay.from_estimator(
-            reduced_tree_gs,X_train_top_features,y_train,ax=ax[1,1])
-
-ax[0,0].set(
-    title='Initial Tree Model'
-)
-ax[0,1].set(
-    title='Grid Searched Tree Model'
-)
-ax[1,0].set(
-    title='Reduced Tree Model'
-)
-ax[1,1].set(
-    title='Grid Searched Reduced\nTree Model'
-)
-
-for ax_ in ax.flatten():
-    ax_.grid(False)
-    ax_.set(
-        xticklabels=health_labels,
-        yticklabels=health_labels
-    )
-    ax_.xaxis.set_tick_params(rotation=45)
-
-
-fig.suptitle("KNN Confusion Matrices")
-
-plt.tight_layout()
-'';
-
-fig.suptitle("Random Forest Confusion Matrices")
-
-plt.tight_layout()
-```
-
-
-    
 ![png](./img/README_98_0.png)
-    
-
 
 It looks like we had slight improvements at every step.
 Any of these models could be just as good as one
@@ -1305,26 +637,10 @@ over-fit of the models in this section.
 Let's go ahead and put the two best models together and
 see how they compare.
 
-
-```python
-score_table = model_scoring_table([
-    scores_best_knn_reduced,
-    scores_best_tree_reduced
-    ],[
-    'Grid Searched KNN Reduced',
-    'Grid Searched Reduced Forest'
-])
-display(score_table['md'])
-```
-
-
-
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
 | Grid Searched KNN Reduced | **0.984** | **0.999** |  0.860  |
 | Grid Searched Reduced Forest |  0.960  |  0.990  | ***0.899*** |
-
-
 
 Among our existing models, our reduced tree is up by
 about 4% over our previous KNN model. There is another
@@ -1336,42 +652,13 @@ Instead of using SMOTE to resample our data to be more
 balanced, we'll have the forest itself weight the
 targets and see if we can improve our scores any.
 
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9356142565212164 |
+| Mean ROC AUC score: | 0.9871731524270375 |
+| Cross Val Score:    | 0.8490108479195053 |
 
-```python
-balanced_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-    # instead of having SMOTE called here, we use
-    # class_weight='balanced' to have the forest
-    # calculate our distribution. In some cases, this
-    # can improve generalization. 
-    ('rfc',RandomForestClassifier(random_state=1,
-                max_depth=5, n_jobs=-2,
-                class_weight='balanced'))
-])
-```
-
-
-```python
-balanced_tree_pipeline.fit(X_train,y_train)
-fig, ax = plt.subplots(figsize=(14,8))
-scores_balanced_tree = model_scoring(balanced_tree_pipeline,X_train,y_train,
-            plot_curve=True,ax=ax, class_names=health_labels,
-            average='macro')
-'';
-```
-
-    
-    Model recall:       0.9356142565212164
-    Mean ROC AUC score: 0.9871731524270375
-    Cross Val Score:    0.8490108479195053
-        
-
-
-
-    
 ![png](./img/README_103_1.png)
-    
-
 
 The cross val score on this model is markedly lower. We
 can run a grid search on this to see if there are any
