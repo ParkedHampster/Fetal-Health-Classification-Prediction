@@ -885,93 +885,6 @@ forest from the previous section. We'll go ahead and
 compare our models against each other and select our
 best model overall.
 
-
-```python
-bin_final_model = reduced_binary_knn_pipeline_gs.best_estimator_
-```
-
-
-```python
-bin_final_model.fit(X_train,y_train_bin)
-```
-
-
-
-
-<style>#sk-container-id-10 {color: black;background-color: white;}#sk-container-id-10 pre{padding: 0;}#sk-container-id-10 div.sk-toggleable {background-color: white;}#sk-container-id-10 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-10 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-10 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-10 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-10 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-10 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-10 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-10 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-10 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-10 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-10 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-10 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-10 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-10 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-10 div.sk-item {position: relative;z-index: 1;}#sk-container-id-10 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-10 div.sk-item::before, #sk-container-id-10 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-10 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-10 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-10 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-10 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-10 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-10 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-10 div.sk-label-container {text-align: center;}#sk-container-id-10 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-10 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-10" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                (&#x27;o&#x27;, SMOTE(random_state=1, sampling_strategy=0.6)),
-                (&#x27;knn&#x27;, KNeighborsClassifier(n_jobs=-2, p=1))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-37" type="checkbox" ><label for="sk-estimator-id-37" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                (&#x27;o&#x27;, SMOTE(random_state=1, sampling_strategy=0.6)),
-                (&#x27;knn&#x27;, KNeighborsClassifier(n_jobs=-2, p=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-38" type="checkbox" ><label for="sk-estimator-id-38" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-39" type="checkbox" ><label for="sk-estimator-id-39" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1, sampling_strategy=0.6)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-40" type="checkbox" ><label for="sk-estimator-id-40" class="sk-toggleable__label sk-toggleable__label-arrow">KNeighborsClassifier</label><div class="sk-toggleable__content"><pre>KNeighborsClassifier(n_jobs=-2, p=1)</pre></div></div></div></div></div></div></div>
-
-
-
-
-```python
-fig, ax = plt.subplots(2,2,figsize=(14,14),
-                        sharex=True,sharey=True)
-
-ConfusionMatrixDisplay.from_estimator(
-            binary_knn_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[0,0])
-ConfusionMatrixDisplay.from_estimator(
-            reduced_binary_knn_pipeline_gs.best_estimator_.fit(X_train_top_features,y_train_bin),
-            X_train_top_features,y_train_bin,ax=ax[0,1])
-ConfusionMatrixDisplay.from_estimator(
-            binary_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[1,0])
-ConfusionMatrixDisplay.from_estimator(
-            binary_extra_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[1,1])
-
-ax[0,0].set(
-    title='Binary KNN'
-)
-ax[0,1].set(
-    title='Reduced Binary KNN'
-)
-ax[1,0].set(
-    title='Binary Random Forest'
-)
-ax[1,1].set(
-    title='Binary Extra Random\nForest'
-)
-
-for ax_ in ax.flatten():
-    ax_.grid(False)
-    ax_.set(
-        xticklabels=health_labels[:-1],
-        yticklabels=health_labels[:-1]
-    )
-    ax_.xaxis.set_tick_params(rotation=45)
-
-
-fig.suptitle("KNN Confusion Matrices")
-
-plt.tight_layout()
-'';
-
-fig.suptitle("Random Forest Confusion Matrices")
-
-plt.tight_layout()
-
-display_table = model_scoring_table([
-    scores_binary_knn_pipeline_gs,
-    scores_reduced_binary_knn_pipeline_gs,
-    scores_binary_tree_pipeline_gs,
-    scores_binary_extra_tree_pipeline_gs
-    ],[
-        "Binary KNN Pipeline",
-        "Binary Reduced KNN Pipeline",
-        "Binary Random Forest Pipeline",
-        "Binary Extra Random Forest Pipeline"
-    ]
-)
-display(display_table['md'])
-```
-
-
-
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
 | Binary KNN Pipeline | **0.979** |  0.998  |  0.852  |
@@ -979,83 +892,10 @@ display(display_table['md'])
 | Binary Random Forest Pipeline | **0.979** | **1.000** |  0.878  |
 | Binary Extra Random Forest Pipeline | **0.979** |  0.998  |  0.854  |
 
-
-
-
-    
 ![png](./img/README_139_1.png)
-    
-
 
 Here, we'll make a table of ALL of the models, including
 the dummy model, which has been mostly brushed off.
-
-
-```python
-scores_dummy = model_scoring(
-    dummy_baseline.fit(X_train,y_train),
-    X_train, y_train,
-    plot_curve=False, average='macro',
-    print_scores=False
-)
-
-scores_dummy_bin = model_scoring(
-    dummy_baseline.fit(X_train,y_train_bin),
-    X_train, y_train_bin,
-    plot_curve=False, average='macro',
-    is_binary=True,
-    print_scores=False
-)
-
-scores_bin_final_model = model_scoring(
-    bin_final_model.fit(X_train_top_features,y_train_bin),
-    X_train_top_features,y_train_bin,
-    plot_curve=False,average='macro',
-    is_binary=True,
-    print_scores=False
-)
-
-scores_nb_final_model = model_scoring(
-    nb_final_model.fit(X_train_top_features,y_train),
-    X_train_top_features,y_train,
-    plot_curve=False,average='macro',
-    print_scores=False
-)
-
-display_table = model_scoring_table(
-    [
-        scores_balanced_extra_tree, scores_balanced_extra_tree_gs,
-        scores_balanced_tree, scores_best_knn_initial,
-        scores_best_knn_reduced, scores_best_tree_initial,
-        scores_best_tree_reduced, scores_binary_extra_tree_pipeline_gs,
-        scores_binary_knn_pipeline_gs, scores_binary_tree_pipeline_gs,
-        scores_extra_tree, scores_extra_tree_gs,
-        scores_knn_initial, scores_reduced_binary_knn_pipeline_gs,
-        scores_reduced_knn_gs_weighted, scores_reduced_knn_initial,
-        scores_reduced_tree_initial, scores_tree_initial,
-        scores_dummy,scores_dummy_bin,
-        scores_bin_final_model,scores_nb_final_model
-    ],[
-        'Balanced Extra Tree', 'GS Balanced Extra Tree',
-        'Balanced Random Forest', 'GS Initial KNN',
-        'GS Reduced KNN', 'GS Initial Forest',
-        'GS Reduced Forest', 'GS Binary Extra Tree',
-        'GS Binary KNN', 'GS Binary Tree',
-        'Extra Tree', 'GS Extra Tree',
-        'KNN Initial', 'GS Reduced Binary KNN',
-        'GS Reduced KNN Weighted', 'Initial Reduced KNN',
-        'Initial Reduced Tree', 'Initial Tree',
-        'Dummy Model', 'Binary Dummy Model',
-        'Final Binary Model','Final Non-Binary Model'
-    ])
-display_table['df'].sort_values('cv_mean',ascending=False,inplace=True)
-display(model_scoring_table(
-    display_table['df'][['recall','rocauc','cv_score']],
-    list(display_table['df']['names'])
-    )['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -1082,32 +922,10 @@ display(model_scoring_table(
 | Dummy Model |  0.000  |  0.500  |  0.000  |
 | Binary Dummy Model |  0.000  |  0.500  |  0.000  |
 
-
-
-Picking out the best model of each version binary and
+Let's pick out the best model of each version binary and
 multiclass, so we can see this a little bit better. For
 posterity, we'll compare against the dummy models to
 see the improvements.
-
-
-```python
-model_scoring_table(
-    [
-        scores_reduced_binary_knn_pipeline_gs,
-        scores_best_tree_reduced,
-        scores_dummy_bin,scores_dummy
-    ],[
-        'GS Binary Reduced KNN',
-        'GS Reduced Forest',
-        'Binary Dummy','Dummy'
-
-    ]
-)['md']
-```
-
-
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -1116,111 +934,24 @@ model_scoring_table(
 | Binary Dummy |  0.000  |  0.500  |  0.000  |
 | Dummy |  0.000  |  0.500  |  0.000  |
 
-
-
-
 We can see that our cross val score is best on the
 forest with a reduced set of X values. Let's go ahead
 and see how these perform on test data and get our
 final results and make some observations.
 
-
-```python
-fig, ax = plt.subplots(2,1,figsize=(8,12))
-ConfusionMatrixDisplay.from_estimator(
-    nb_final_model.fit(X_train_top_features,y_train),
-    X_test_top_features,y_test,
-    ax=ax[0]
-)
-ax[0].set(
-    title="Multi-Class Final Model Grid\nSearched Random Forest",
-    yticklabels=health_labels,
-    xticklabels=health_labels
-)
-
-
-ConfusionMatrixDisplay.from_estimator(
-    bin_final_model.fit(X_train_top_features,y_train_bin),
-    X_test_top_features,y_test_bin,
-    ax=ax[1]
-)
-ax[1].set(
-    title="Multi-Class Final Model Grid\nSearched Random Forest",
-    xticklabels=health_labels[:-1],
-    yticklabels=health_labels[:-1]
-)
-
-for tick in ax[0].get_xticklabels():
-    tick.set_rotation(30)
-
-for ax_ in ax:
-    ax_.grid(False)
-
-plt.suptitle("Model Results on Final\n Testing Data")
-plt.xticks(rotation=45)
-plt.tight_layout()
-'';
-```
-
-
-    
 ![png](./img/README_145_0.png)
-    
 
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9263922518159806 |
+| Mean ROC AUC score: | 0.9782291859024282 |
+| Cross Val Score:    | 0.7779220779220779 |
 
+| Model | Recall | ROC AUC |
+|---:|:---:|:---:|
+| Final Model Against Testing Data | **0.926** | **0.978** |
 
-```python
-fig, ax = plt.subplots(2,1,figsize=(14,14))
-ConfusionMatrixDisplay.from_estimator(
-    nb_final_model,X_test_top_features,y_test,ax=ax[0]
-)
-ax[0].grid(False)
-
-ax[0].set(
-    xticklabels=health_labels,
-    yticklabels=health_labels
-)
-
-testing_scores = model_scoring(
-            nb_final_model,
-            X_test_top_features,y_test,
-            plot_curve=True,ax=ax[1], class_names=health_labels,
-            average='macro',
-            multi_class='ovr',
-            is_binary=False)
-
-display_table = model_scoring_table(
-    [testing_scores],
-    ["Final Model Against Testing Data"]
-)
-
-display(display_table['md'])
-
-plt.suptitle("Final Random Forest Classifier Model\nResults on Testing Data")
-plt.tight_layout()
-'';
-```
-
-    
-    Model recall:       0.9263922518159806
-    Mean ROC AUC score: 0.9782291859024282
-    Cross Val Score:    0.7779220779220779
-        
-
-
-
-
-| Model | Recall | ROC AUC | CV Score |
-|---:|:---:|:---:|:---:|
-| Final Model Against Testing Data | **0.926** | **0.978** | ***0.778*** |
-
-
-
-
-    
 ![png](./img/README_146_2.png)
-    
-
 
 We can ignore our CV score in the testing data, the
 sample it's using is much smaller and all we're really
@@ -1306,11 +1037,8 @@ Fetal Health Classification Project
 ├── LICENSE
 ├── README.md
 └── scratch_books
-   ├── code -> ../code
-   ├── data -> ../data
-   ├── img -> ../img
-   └── scratch.ipynb
-   ```
+   └── <Non-Presentation Ready Work and Data>
+```
 
 All resources used and referenced:
 | Name | Purpose | Link |
