@@ -665,111 +665,13 @@ can run a grid search on this to see if there are any
 improvements that can be made.
 
 
-```python
-balanced_tree_params = {
-    'rfc__max_depth': [3,5,7,9,11],
-    'rfc__min_samples_split':[2,4,6],
-    'rfc__min_samples_leaf': [1,3,5],
-    'rfc__min_samples_split': [2,4,6]
-}
-tree_weights_gs = GridSearchCV(
-    balanced_tree_pipeline,
-    param_grid=balanced_tree_params,
-    n_jobs=-2, verbose=3)
-tree_weights_gs.fit(X_train,y_train)
-```
+| Metric | Score |
+| ---: | :---: |
+| Model Recall:       | 0.9943352566414232 |
+| Mean ROC AUC score: | 0.9994751683429844 |
+| Cross Val Score:    | 0.8459650019215316 |
 
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-
-
-
-
-
-<style>#sk-container-id-8 {color: black;background-color: white;}#sk-container-id-8 pre{padding: 0;}#sk-container-id-8 div.sk-toggleable {background-color: white;}#sk-container-id-8 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-8 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-8 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-8 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-8 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-8 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-8 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-8 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-8 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-8 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-8 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-8 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-8 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-8 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-8 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-8 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-8 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-8 div.sk-item {position: relative;z-index: 1;}#sk-container-id-8 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-8 div.sk-item::before, #sk-container-id-8 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-8 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-8 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-8 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-8 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-8 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-8 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-8 div.sk-label-container {text-align: center;}#sk-container-id-8 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-8 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-8" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;rfc&#x27;,
-                                        RandomForestClassifier(class_weight=&#x27;balanced&#x27;,
-                                                               max_depth=5,
-                                                               n_jobs=-2,
-                                                               random_state=1))]),
-             n_jobs=-2,
-             param_grid={&#x27;rfc__max_depth&#x27;: [3, 5, 7, 9, 11],
-                         &#x27;rfc__min_samples_leaf&#x27;: [1, 3, 5],
-                         &#x27;rfc__min_samples_split&#x27;: [2, 4, 6]},
-             verbose=3)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-29" type="checkbox" ><label for="sk-estimator-id-29" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                                       (&#x27;rfc&#x27;,
-                                        RandomForestClassifier(class_weight=&#x27;balanced&#x27;,
-                                                               max_depth=5,
-                                                               n_jobs=-2,
-                                                               random_state=1))]),
-             n_jobs=-2,
-             param_grid={&#x27;rfc__max_depth&#x27;: [3, 5, 7, 9, 11],
-                         &#x27;rfc__min_samples_leaf&#x27;: [1, 3, 5],
-                         &#x27;rfc__min_samples_split&#x27;: [2, 4, 6]},
-             verbose=3)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-30" type="checkbox" ><label for="sk-estimator-id-30" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()),
-                (&#x27;rfc&#x27;,
-                 RandomForestClassifier(class_weight=&#x27;balanced&#x27;, max_depth=5,
-                                        n_jobs=-2, random_state=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-31" type="checkbox" ><label for="sk-estimator-id-31" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-32" type="checkbox" ><label for="sk-estimator-id-32" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier(class_weight=&#x27;balanced&#x27;, max_depth=5, n_jobs=-2,
-                       random_state=1)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
-
-
-
-
-```python
-tree_weights_gs.best_params_ , tree_weights_gs.best_estimator_
-```
-
-
-
-
-    ({'rfc__max_depth': 11,
-      'rfc__min_samples_leaf': 1,
-      'rfc__min_samples_split': 4},
-     Pipeline(steps=[('ss', StandardScaler()),
-                     ('rfc',
-                      RandomForestClassifier(class_weight='balanced', max_depth=11,
-                                             min_samples_split=4, n_jobs=-2,
-                                             random_state=1))]))
-
-
-
-
-```python
-fig, ax = plt.subplots(figsize=(14,8))
-scores_balanced_tree = model_scoring(
-    tree_weights_gs.best_estimator_,
-    X_train,y_train,ax=ax,average='macro',
-    plot_curve=True,class_names=health_labels
-)
-'';
-```
-
-    
-    Model recall:       0.9943352566414232
-    Mean ROC AUC score: 0.9994751683429844
-    Cross Val Score:    0.8459650019215316
-        
-
-
-
-    
 ![png](./img/README_107_1.png)
-    
-
-
-
-```python
-display(model_scoring_table([
-    scores_best_knn_reduced,
-    scores_best_tree_reduced,
-    scores_balanced_tree
-],[
-    'Grid Searched Reduced KNN',
-    'Grid Searched Reduced Forest',
-    'Grid Searched Balanced Forest'
-])['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -777,56 +679,11 @@ display(model_scoring_table([
 | Grid Searched Reduced Forest |  0.960  |  0.990  | ***0.899*** |
 | Grid Searched Balanced Forest | **0.994** | **0.999** |  0.846  |
 
-
-
 It looks like this was another case of the model
 pushing our cv score down and our recall up, creating
 more overfit. 
 
-
-```python
-fig, ax = plt.subplots(3,1,figsize=(8,22),sharex=True)
-ConfusionMatrixDisplay.from_estimator(
-    knn_reduced_gs.fit(X_train_top_features,y_train),
-    X_train_top_features,y_train,
-    ax=ax[0])
-ConfusionMatrixDisplay.from_estimator(
-    reduced_tree_gs,
-    X_train_top_features,y_train,
-    ax=ax[1])
-ConfusionMatrixDisplay.from_estimator(
-    tree_weights_gs,X_train,y_train,
-    ax=ax[2])
-for ax_ in ax:
-    ax_.grid(False)
-    ax_.set(
-        xticklabels=health_labels,
-        yticklabels=health_labels
-    )
-plt.xticks(rotation=45)
-
-ax[0].set(
-    title="KNN Reduced Grid Searched"
-)
-ax[1].set(
-    title="Reduced Random Forest\nGrid Searched"
-)
-ax[2].set(
-    title="Balanced Forest\nGrid Searched"
-)
-plt.suptitle("Contending Models")
-plt.tight_layout()
-'';
-```
-
-    Fitting 5 folds for each of 36 candidates, totalling 180 fits
-
-
-
-    
 ![png](./img/README_110_1.png)
-    
-
 
 Currently, our grid searched forest with reduced
 features model is giving us the best results with a
@@ -847,152 +704,42 @@ same tests in line and look at all of the results at
 the end.
 
 
-```python
-extra_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
+scores_extra_tree
+scores_balanced_extra_tree
+scores_extra_tree_gs
+scores_balanced_extra_tree_gs
 
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
+### Extra Tree Scores
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.8519804062988341 |
+| Mean ROC AUC score: | 0.9699797573852486 |
+| Cross Val Score:    | 0.8325876480452783 |
+<br/>
 
-    ('etc',ExtraTreesClassifier(random_state=1,
-                max_depth=5, n_jobs=-2))
-])
+### Balanced Extra Tree Scores
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.8590726048803943 |
+| Mean ROC AUC score: | 0.9719116370252658 |
+| Cross Val Score:    | 0.8320712364182651 |
+<br/>
 
-balanced_extra_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
+### Grid Searched Extra Tree Scores
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9029630965260248 |
+| Mean ROC AUC score: | 0.9837712317443791 |
+| Cross Val Score:    | 0.8518125720574362 |
+<br/>
+### Grid Searched Balanced Extra Tree Scores
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9943352566414232 |
+| Mean ROC AUC score: | 0.99874513554954   |
+| Cross Val Score:    | 0.8315174859378821 |
 
-    ('etc',ExtraTreesClassifier(random_state=1,
-                max_depth=5, n_jobs=-2,
-                class_weight='balanced'))
-])
-
-```
-
-
-```python
-extra_tree_pipeline.fit(X_train,y_train)
-balanced_extra_tree_pipeline.fit(X_train,y_train)
-
-extra_tree_params               = {
-    'o__sampling_strategy':['auto','all'],
-    'etc__max_depth': [3,5,7],
-    'etc__min_samples_split': [2,4,6],
-    'etc__min_samples_leaf': [1,3,5],
-}
-
-extra_tree_pipeline_gs          = GridSearchCV(
-    extra_tree_pipeline,
-    param_grid=extra_tree_params,
-    n_jobs=-2, verbose=3)
-
-balanced_extra_tree_params      = {
-    'etc__max_depth': [3,5,7,9,11],
-    'etc__min_samples_split':[2,4,6],
-    'etc__min_samples_leaf': [1,3,5]
-}
-balanced_extra_tree_pipeline_gs = GridSearchCV(
-    balanced_extra_tree_pipeline,
-    param_grid=balanced_extra_tree_params,
-    n_jobs=-2, verbose=3)
-```
-
-
-```python
-extra_tree_pipeline_gs.fit(X_train,y_train)
-balanced_extra_tree_pipeline_gs.fit(X_train,y_train)
-extra_tree_pipeline.fit(X_train,y_train)
-balanced_extra_tree_pipeline.fit(X_train,y_train)
-
-fig, ax = plt.subplots(4,1,figsize=(14,32),sharex=True)
-scores_extra_tree = model_scoring(extra_tree_pipeline,X_train,y_train,
-            plot_curve=True,ax=ax[0], class_names=health_labels,
-            average='macro')
-scores_balanced_extra_tree = model_scoring(balanced_extra_tree_pipeline,X_train,y_train,
-            plot_curve=True,ax=ax[1], class_names=health_labels,
-            average='macro')
-scores_extra_tree_gs = model_scoring(extra_tree_pipeline_gs,X_train,y_train,
-            plot_curve=True,ax=ax[2], class_names=health_labels,
-            average='macro')
-scores_balanced_extra_tree_gs = model_scoring(balanced_extra_tree_pipeline_gs,X_train,y_train,
-            plot_curve=True,ax=ax[3], class_names=health_labels,
-            average='macro')
-
-
-ax[0].set(
-    title="Extra Tree"
-)
-ax[1].set(
-    title="Balanced Extra Tree"
-)
-ax[2].set(
-    title="Grid Searched Extra Tree"
-)
-ax[3].set(
-    title="Balanced Grid Searched Extra Tree"
-)
-fig.suptitle("Extra Tree Models - ROC One-v-Rest Multiclass",y=1)
-plt.tight_layout()
-'';
-```
-
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    
-    Model recall:       0.8519804062988341
-    Mean ROC AUC score: 0.9699797573852486
-    Cross Val Score:    0.8325876480452783
-        
-    
-    Model recall:       0.8590726048803943
-    Mean ROC AUC score: 0.9719116370252658
-    Cross Val Score:    0.8320712364182651
-        
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    Fitting 5 folds for each of 54 candidates, totalling 270 fits
-    
-    Model recall:       0.9029630965260248
-    Mean ROC AUC score: 0.9837712317443791
-    Cross Val Score:    0.8518125720574362
-        
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    Fitting 5 folds for each of 45 candidates, totalling 225 fits
-    
-    Model recall:       0.9943352566414232
-    Mean ROC AUC score: 0.99874513554954
-    Cross Val Score:    0.8315174859378821
-        
-
-
-
-    
 ![png](./img/README_116_1.png)
-    
-
-
-
-```python
-display_table = model_scoring_table([
-    scores_extra_tree,
-    scores_balanced_extra_tree,
-    scores_extra_tree_gs,
-    scores_balanced_extra_tree_gs
-    ],[
-        'Extra Tree',
-        'Balanced Extra Tree',
-        'Grid Searched Extra Tree',
-        'Balanced Grid Searched Extra Tree',
-
-    ]
-)
-display(display_table['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -1012,81 +759,13 @@ Let's go ahead and take a look at all of our best
 models from each section so far to see how they
 compare.
 
-
-```python
-display_table = model_scoring_table(
-    [
-        scores_balanced_extra_tree_gs,
-        scores_best_knn_reduced,
-        scores_best_tree_reduced
-    ],[
-        "Balanced Grid Searched Extra Tree",
-        'Grid Searched Reduced KNN',
-        'GS Reduced Random Forest'
-    ]
-)
-
-display(display_table['md'])
-```
-
-
-
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
 | Balanced Grid Searched Extra Tree | **0.994** | **0.999** |  0.832  |
 | Grid Searched Reduced KNN |  0.984  | **0.999** |  0.860  |
 | GS Reduced Random Forest |  0.960  |  0.990  | ***0.899*** |
 
-
-
-
-```python
-fig, ax = plt.subplots(3,1,figsize=(8,18),sharex=True)
-ConfusionMatrixDisplay.from_estimator(
-    balanced_extra_tree_pipeline_gs.best_estimator_.fit(
-        X_train,y_train
-        ),
-    X_train,y_train,ax=ax[0]
-)
-ax[0].set(
-    title="GS Balanced Extra Tree"
-)
-ConfusionMatrixDisplay.from_estimator(
-    knn_reduced_gs.best_estimator_.fit(
-        X_train_top_features,y_train
-        ),
-    X_train_top_features,y_train,ax=ax[1]
-)
-ax[1].set(
-    title="GS Reduced KNN"
-)
-ConfusionMatrixDisplay.from_estimator(
-    reduced_tree_gs.best_estimator_.fit(
-        X_train_top_features,y_train
-        ),
-    X_train_top_features,y_train,ax=ax[2]
-)
-ax[2].set(
-    title="GS Random Forest"
-)
-
-for ax_ in ax:
-    ax_.set(
-        xticklabels=health_labels,
-        yticklabels=health_labels
-    )
-    ax_.grid(False)
-
-plt.xticks(rotation=45)
-
-plt.tight_layout()
-```
-
-
-    
 ![png](./img/README_120_0.png)
-    
-
 
 Interestingly, our balanced extra tree model has our
 highest recall score of the set, but our cv score is by
@@ -1096,16 +775,6 @@ to predict existing feature outcomes, it's to predict
 new outcomes where possible. We need a model that can
 generalize well to new data, which means our cross val
 score is what really needs to be maxed out here.
-
-
-```python
-# setting a preliminary final model. This will make the
-# process a little bit easier later when we want to
-# call back to this model later. 
-
-nb_final_model = reduced_tree_gs.best_estimator_
-```
-
 
 For the next section, we're going to translate the data
 so that any values that would indicate that something
@@ -1119,321 +788,82 @@ models for comparison.
 Something I was alluding to before, the main item we're
 concerned about is Healthy vs Suspect _or worse_.
 
-Here we'll create a new set of `y_train` and `y_test`
+Here we'll create a new training and testing sets
 to run our models on. Once we do this, our testing will
 be mostly the same.
 
 First, we'll verify shapes, reset target values, etc.
 
-
-```python
-# here we set our suspect and path. values (1 and 2) to
-# the same value. 
-binarize = {0:0,1:1,2:1}
-print(f"""Training shapes and counts:
+### Training shapes and counts:
 Before:
-{y_train.value_counts()}
-{y_train.shape}
------
+| Target          | Count|
+|---:|:---:|
+| Healthy         | 1323 |
+| Suspect         |  236 |
+| Pathological    |  141 |
+| Total:          | 1700 |
+
 After:
-{(y_train_bin := y_train.map(binarize)).value_counts()}
-{y_train_bin.shape}
-========================================
-Testing shape and counts:
+| Target   | Count|
+|---:|:---:|
+| Healthy  | 1323 |
+| Suspect+ |  377 |
+| Total:   | 1700 |
+
+### Testing shape and counts:
 Before:
-{y_test.value_counts()}
-{y_test.shape}
------
+| Target         | Count |
+|---:|:---:|
+| Healthy        |  332  |
+| Suspect        |   59  |
+| Pathological   |   35  |
+| Total:         |  426  |
+
 After:
-{(y_test_bin := y_test.map(binarize)).value_counts()}
-{y_test_bin.shape}""")
-```
-
-    Training shapes and counts:
-    Before:
-    0.0    1323
-    1.0     236
-    2.0     141
-    Name: fetal_health, dtype: int64
-    (1700,)
-    -----
-    After:
-    0    1323
-    1     377
-    Name: fetal_health, dtype: int64
-    (1700,)
-    ========================================
-    Testing shape and counts:
-    Before:
-    0.0    332
-    1.0     59
-    2.0     35
-    Name: fetal_health, dtype: int64
-    (426,)
-    -----
-    After:
-    0    332
-    1     94
-    Name: fetal_health, dtype: int64
-    (426,)
-
+| Target   | Count |
+|---:|:---:|
+| Healthy  |  332 |
+| Suspect+ |   94 |
+| Total:   |  426 |
 
 Here, we'll go ahead and create translated versions of
 all of the models from before to better fit the
 binarized data.
 
+scores_binary_extra_tree_pipeline_gs
 
-```python
-binary_knn_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
+### Grid Searched Binary KNN Scores:
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9787798408488063 |
+| Mean ROC AUC score: | 0.9978136258924436 |
+| Cross Val Score:    | 0.8517192982456141 |
+<br/>
 
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
+### Grid Searched Reduced Binary KNN Scores:
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9628647214854111 |
+| Mean ROC AUC score: | 0.9932995302453431 |
+| Cross Val Score:    | 0.8914035087719299 |
+<br/>
 
-    ('knn',KNeighborsClassifier(n_neighbors=5, n_jobs=-2))
-])
-binary_knn_pipeline.fit(X_train,y_train_bin)
-reduced_binary_knn_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
+### Grid Searched Binary Random Forest Scores:
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9787798408488063 |
+| Mean ROC AUC score: | 0.9996872312143248 |
+| Cross Val Score:    | 0.8780701754385966 |
+<br/>
 
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
+### Grid Searched Binary Extra Random Forest Scores:
+| Metric | Score |
+| ---: | :---: |
+| Model recall:       | 0.9787798408488063 |
+| Mean ROC AUC score: | 0.9984882842025699 |
+| Cross Val Score:    | 0.8542105263157895 |
 
-    ('knn',KNeighborsClassifier(n_neighbors=5, n_jobs=-2))
-])
-reduced_binary_knn_pipeline.fit(X_train_top_features,y_train_bin)
-
-binary_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
-
-    ('rfc',RandomForestClassifier(random_state=1,
-                max_depth=5, n_jobs=-2))
-])
-binary_tree_pipeline.fit(X_train,y_train_bin)
-
-binary_extra_tree_pipeline = imbPipeline(steps=[
-    ('ss',StandardScaler()),
-
-    ('o',SMOTE(random_state=1,sampling_strategy='auto')),
-
-    ('etc',ExtraTreesClassifier(random_state=1,
-                max_depth=5, n_jobs=-2))
-])
-binary_extra_tree_pipeline.fit(X_train,y_train_bin)
-```
-
-
-
-
-<style>#sk-container-id-9 {color: black;background-color: white;}#sk-container-id-9 pre{padding: 0;}#sk-container-id-9 div.sk-toggleable {background-color: white;}#sk-container-id-9 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-9 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-9 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-9 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-9 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-9 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-9 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-9 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-9 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-9 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-9 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-9 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-9 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-9 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-9 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-9 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-9 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-9 div.sk-item {position: relative;z-index: 1;}#sk-container-id-9 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-9 div.sk-item::before, #sk-container-id-9 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-9 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-9 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-9 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-9 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-9 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-9 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-9 div.sk-label-container {text-align: center;}#sk-container-id-9 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-9 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-9" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;etc&#x27;,
-                 ExtraTreesClassifier(max_depth=5, n_jobs=-2, random_state=1))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-33" type="checkbox" ><label for="sk-estimator-id-33" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;ss&#x27;, StandardScaler()), (&#x27;o&#x27;, SMOTE(random_state=1)),
-                (&#x27;etc&#x27;,
-                 ExtraTreesClassifier(max_depth=5, n_jobs=-2, random_state=1))])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-34" type="checkbox" ><label for="sk-estimator-id-34" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-35" type="checkbox" ><label for="sk-estimator-id-35" class="sk-toggleable__label sk-toggleable__label-arrow">SMOTE</label><div class="sk-toggleable__content"><pre>SMOTE(random_state=1)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-36" type="checkbox" ><label for="sk-estimator-id-36" class="sk-toggleable__label sk-toggleable__label-arrow">ExtraTreesClassifier</label><div class="sk-toggleable__content"><pre>ExtraTreesClassifier(max_depth=5, n_jobs=-2, random_state=1)</pre></div></div></div></div></div></div></div>
-
-
-
-
-```python
-##! DEFINE PARAMS HERE
-binary_knn_params = {
-    'o__sampling_strategy':['auto',0.8,0.6,0.4],
-    'knn__n_neighbors':[3,5,7],
-    'knn__p':[1,2,3]
-}
-
-binary_tree_params = {
-    'o__sampling_strategy':['auto',0.8,0.6,0.4],
-    'rfc__max_depth': [3,5,7,9,11],
-    'rfc__min_samples_split': [2,4,6]
-}
-
-binary_extra_tree_params = {
-    'o__sampling_strategy':['auto',0.8,0.6,0.4],
-    'etc__max_depth': [3,5,7,9,11],
-    'etc__min_samples_split': [2,4,6]
-}
-```
-
-
-```python
-binary_knn_pipeline_gs = GridSearchCV(
-    binary_knn_pipeline,
-    param_grid=binary_knn_params,
-    n_jobs=-2,verbose=3
-)
-reduced_binary_knn_pipeline_gs = GridSearchCV(
-    reduced_binary_knn_pipeline,
-    param_grid=binary_knn_params,
-    n_jobs=-2,verbose=3
-)
-binary_tree_pipeline_gs = GridSearchCV(
-    binary_tree_pipeline,
-    param_grid=binary_tree_params,
-    n_jobs=-2,verbose=3
-)
-binary_extra_tree_pipeline_gs = GridSearchCV(
-    binary_extra_tree_pipeline,
-    param_grid=binary_extra_tree_params,
-    n_jobs=-2,verbose=3
-)
-
-```
-
-
-```python
-binary_knn_pipeline_gs.fit(X_train,y_train_bin)
-reduced_binary_knn_pipeline_gs.fit(X_train_top_features,y_train_bin)
-binary_tree_pipeline_gs.fit(X_train,y_train_bin)
-binary_extra_tree_pipeline_gs.fit(X_train,y_train_bin)
-'';
-```
-
-    Fitting 5 folds for each of 36 candidates, totalling 180 fits
-    Fitting 5 folds for each of 36 candidates, totalling 180 fits
-    Fitting 5 folds for each of 60 candidates, totalling 300 fits
-    Fitting 5 folds for each of 60 candidates, totalling 300 fits
-
-
-
-```python
-fig, ax = plt.subplots(4,1,figsize=(14,32),sharex=True)
-scores_binary_knn_pipeline_gs = model_scoring(
-            binary_knn_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,
-            plot_curve=True,ax=ax[0], class_names=health_labels,
-            average='macro',multi_class='raise',
-            is_binary=True)
-scores_reduced_binary_knn_pipeline_gs = model_scoring(
-            reduced_binary_knn_pipeline_gs.best_estimator_,
-            X_train_top_features,y_train_bin,
-            plot_curve=True,ax=ax[1], class_names=health_labels,
-            average='macro',multi_class='raise',
-            is_binary=True)
-scores_binary_tree_pipeline_gs = model_scoring(
-            binary_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,
-            plot_curve=True,ax=ax[2], class_names=health_labels,
-            average='macro',multi_class='raise',
-            is_binary=True)
-scores_binary_extra_tree_pipeline_gs = model_scoring(
-            binary_extra_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,
-            plot_curve=True,ax=ax[3], class_names=health_labels,
-            average='macro',multi_class='raise',
-            is_binary=True)
-
-
-ax[0].set(
-    title="KNN Pipeline"
-)
-ax[1].set(
-    title="KNN On Reduced Features"
-)
-ax[2].set(
-    title="Random Forest"
-)
-ax[3].set(
-    title="Extra Random Forest"
-)
-fig.suptitle("Grid Searched Pipelines with Binary Targets",y=1)
-plt.tight_layout()
-'';
-```
-
-    
-    Model recall:       0.9787798408488063
-    Mean ROC AUC score: 0.9978136258924436
-    Cross Val Score:    0.8517192982456141
-        
-    
-    Model recall:       0.9628647214854111
-    Mean ROC AUC score: 0.9932995302453431
-    Cross Val Score:    0.8914035087719299
-        
-    
-    Model recall:       0.9787798408488063
-    Mean ROC AUC score: 0.9996872312143248
-    Cross Val Score:    0.8780701754385966
-        
-    
-    Model recall:       0.9787798408488063
-    Mean ROC AUC score: 0.9984882842025699
-    Cross Val Score:    0.8542105263157895
-        
-
-
-
-    
 ![png](./img/README_132_1.png)
-    
-
-
-
-```python
-fig, ax = plt.subplots(2,2,figsize=(14,14),
-                        sharex=True,sharey=True)
-
-ConfusionMatrixDisplay.from_estimator(
-            binary_knn_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[0,0])
-ConfusionMatrixDisplay.from_estimator(
-            reduced_binary_knn_pipeline_gs.best_estimator_,
-            X_train_top_features,y_train_bin,ax=ax[0,1])
-ConfusionMatrixDisplay.from_estimator(
-            binary_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[1,0])
-ConfusionMatrixDisplay.from_estimator(
-            binary_extra_tree_pipeline_gs.best_estimator_,
-            X_train,y_train_bin,ax=ax[1,1])
-
-ax[0,0].set(
-    title='Binary KNN'
-)
-ax[0,1].set(
-    title='Reduced Binary KNN'
-)
-ax[1,0].set(
-    title='Binary Random Forest'
-)
-ax[1,1].set(
-    title='Binary Extra Random\nForest'
-)
-
-for ax_ in ax.flatten():
-    ax_.grid(False)
-    ax_.set(
-        xticklabels=health_labels[:-1],
-        yticklabels=health_labels[:-1]
-    )
-    ax_.xaxis.set_tick_params(rotation=45)
-
-
-fig.suptitle("KNN Confusion Matrices")
-
-plt.tight_layout()
-'';
-
-fig.suptitle("Random Forest Confusion Matrices")
-
-plt.tight_layout()
-
-display_table = model_scoring_table([
-    scores_binary_knn_pipeline_gs,
-    scores_reduced_binary_knn_pipeline_gs,
-    scores_binary_tree_pipeline_gs,
-    scores_binary_extra_tree_pipeline_gs
-    ],[
-        "Binary KNN Pipeline",
-        "Binary Reduced KNN Pipeline",
-        "Binary Random Forest Pipeline",
-        "Binary Extra Random Forest Pipeline"
-    ]
-)
-display(display_table['md'])
-```
-
-
 
 | Model | Recall | ROC AUC | CV Score |
 |---:|:---:|:---:|:---:|
@@ -1442,28 +872,7 @@ display(display_table['md'])
 | Binary Random Forest Pipeline | **0.979** | **1.000** |  0.878  |
 | Binary Extra Random Forest Pipeline | **0.979** |  0.998  |  0.854  |
 
-
-
-
-    
 ![png](./img/README_133_1.png)
-    
-
-
-
-```python
-reduced_binary_knn_pipeline_gs.best_params_ , binary_tree_pipeline_gs.best_params_
-```
-
-
-
-
-    ({'knn__n_neighbors': 5, 'knn__p': 1, 'o__sampling_strategy': 0.6},
-     {'o__sampling_strategy': 0.6,
-      'rfc__max_depth': 9,
-      'rfc__min_samples_split': 4})
-
-
 
 # The Final Model
 
