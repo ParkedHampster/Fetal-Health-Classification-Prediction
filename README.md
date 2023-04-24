@@ -945,7 +945,6 @@ final results and make some observations.
 | ---: | :---: |
 | Model recall:       | 0.9263922518159806 |
 | Mean ROC AUC score: | 0.9782291859024282 |
-| Cross Val Score:    | 0.7779220779220779 |
 
 | Model | Recall | ROC AUC |
 |---:|:---:|:---:|
